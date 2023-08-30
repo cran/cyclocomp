@@ -10,7 +10,7 @@ flowgraph <- function(expr) {
     id = rep("", prealloc),
     type = rep("", prealloc)
   )
-  nodeslast <- replicate(prealloc, character())
+  nodeslast <- rep(list(character()), prealloc)
 
   ## The structure of the graph is stored here
   num_edges <- 0
@@ -34,9 +34,11 @@ flowgraph <- function(expr) {
   add_edges <- function(...) {
     args <- unlist(list(...))
     n <- length(args) - 1
-    edges$from[num_edges + (1:n)] <<- head(args, -1)
-    edges$to[num_edges + (1:n)]   <<- tail(args, -1)
-    num_edges <<- num_edges + n
+    if (n > 0) {
+      edges$from[num_edges + (1:n)] <<- head(args, -1)
+      edges$to[num_edges + (1:n)]   <<- tail(args, -1)
+      num_edges <<- num_edges + n
+    }
   }
 
   add_node(NULL, "2", "exit")
